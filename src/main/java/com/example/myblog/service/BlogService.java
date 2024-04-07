@@ -14,12 +14,18 @@ public class BlogService {
     private final BlogRepository blogRepository;
 
     //블로그 글 포스팅
-    public Article save(AddArticleRequest request){
+    public Article save(AddArticleRequest request) {
         return blogRepository.save(request.toEntity());
     }
 
     //블로그 모든 글 조회
-    public List<Article> findAll(){
+    public List<Article> findAll() {
         return blogRepository.findAll();
+    }
+
+    //블로그 글 조회
+    public Article findById(long id) {
+        return blogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found:" + id));
     }
 }
