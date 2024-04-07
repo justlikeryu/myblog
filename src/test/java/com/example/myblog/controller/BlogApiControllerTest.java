@@ -19,8 +19,10 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest//테스트용 애플리케이션 컨텍스트
 @AutoConfigureMockMvc
@@ -46,15 +48,15 @@ class BlogApiControllerTest {
 
     @DisplayName("addArticle: 블로그 포스팅 성공")
     @Test
-    public void addArticle() throws Exception{
+    public void addArticle() throws Exception {
         //given
-        final String url ="/api/articles";
+        final String url = "/api/articles";
         final String title = "title";
         final String content = "content";
         final AddArticleRequest addArticleRequest = new AddArticleRequest(title, content);
 
         //json으로 직렬화
-        final String requestBody =objectMapper.writeValueAsString(addArticleRequest);
+        final String requestBody = objectMapper.writeValueAsString(addArticleRequest);
 
         //when
         //mockMvc를 이용해 http method, url, request type등을 설정한 뒤 해당 내용을 바탕으로 요청을 전송한다
@@ -70,5 +72,29 @@ class BlogApiControllerTest {
         assertThat(articles.size()).isEqualTo(1);//블로그 개수가 1인지 검증
         assertThat(articles.get(0).getTitle()).isEqualTo(title);
         assertThat(articles.get(0).getContent()).isEqualTo(content);
+    }
+
+    @DisplayName("findAllArticles: 블로그 전체 글 조회 성공")
+    @Test
+    public void findAllArticles() throws Exception {
+        // given
+        final String url = "/api/articles";
+        final String title = "title";
+        final String content = "content";
+
+        blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(get(url)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].content").value(content))
+                .andExpect(jsonPath("$[0].title").value(title));
     }
 }
