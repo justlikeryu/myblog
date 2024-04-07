@@ -21,6 +21,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -119,5 +120,28 @@ class BlogApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").value(content))
                 .andExpect(jsonPath("$.title").value(title));
+    }
+
+    @DisplayName("deleteArticle: 블로그 글 삭제")
+    @Test
+    public void deleteArticle() throws Exception{
+        //given
+        final String url ="/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        Article savedArticle = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
+
+        //when
+        mockMvc.perform(delete(url, savedArticle.getId()))
+                .andExpect(status().isOk());
+
+        //then
+        List<Article> articles = blogRepository.findAll();
+
+        assertThat(articles).isEmpty();//
     }
 }
