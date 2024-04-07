@@ -28,7 +28,7 @@ public class BlogApiController {
     }
 
     //findAll()메서드로 전체 글을 조회하여 응답용 객체인 ArticleResponse로 파싱해 body에 담아 전송
-    @GetMapping("/api/arcticles")
+    @GetMapping("/api/articles")
     public ResponseEntity<List<ArticleResponse>> findAllArticles(){
         List<ArticleResponse> articles = blogService.findAll()
                 .stream()
