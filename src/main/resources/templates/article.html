@@ -19,7 +19,7 @@
 
                 <header class="mb-4">
                     <h1 class="fw-bolder mb-1" th:text="${article.title}"></h1>
-                    <div class="text-muted fst-italic mb-2" th:text="|최종 게시일자 ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}|"></div>
+                    <div class="text-muted fst-italic mb-2" th:text="|최종 게시일자 ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')} 작성자 ${article.author}|"></div>
                 </header>
 
                 <section class="mb-5">
