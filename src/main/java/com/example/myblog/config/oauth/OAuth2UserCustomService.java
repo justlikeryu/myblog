@@ -14,19 +14,18 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 public class OAuth2UserCustomService extends DefaultOAuth2UserService {
-    private UserRepository userRepository;
 
-    //loadUser(): 리소스 서버에서 보내주는 사용자 정보를 불러온다
+    private final UserRepository userRepository;
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        //요청을 바탕으로 유저 정보를 담은 객체 반환
-        OAuth2User user = super.loadUser(userRequest);
+        OAuth2User user = super.loadUser(userRequest); // 요청을 바탕으로 유저 정보를 담은 객체 반환
         saveOrUpdate(user);
 
         return user;
     }
 
-    //기존의 유저면 업데이트를, 그렇지 않으면 유저 생성
+    // 유저가 있으면 업데이트, 없으면 유저 생성
     private User saveOrUpdate(OAuth2User oAuth2User) {
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
