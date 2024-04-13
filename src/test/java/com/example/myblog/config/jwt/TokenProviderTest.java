@@ -32,7 +32,7 @@ class TokenProviderTest {
     void generateToken() {
         //given 토큰에 유저 정보 추가를 하기 위해 테스트 유저 생성
         User testUser = userRepository.save(User.builder()
-                .email("user@gmail.com")
+                .email("user" + String.valueOf(System.currentTimeMillis()) + "@test.com")
                 .password("test")
                 .build());
 
